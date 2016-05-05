@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import sys
+from optparse import OptionParser
+from openforge.operations import open_blend
+import bpy
+
+def option_parser():
+	usage = "usage: %prog [file name]"
+	parser = OptionParser(usage=usage)
+	return parser
+
+def main():
+	parser = option_parser()
+	(options, args) = parser.parse_args()
+	if len(args) != 1:
+		sys.stderr.write("Requires 1 argument to run\n")
+		sys.exit(1)
+	open_blend(args[0])
+	for o in list(bpy.data.objects):
+		print(o.name)
+
+if __name__ == '__main__':
+	main()
+

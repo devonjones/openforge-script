@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+import sys
+from optparse import OptionParser
+from openforge.wall import assemble_walls
+from openforge.config import parse_config
+
+def option_parser():
+	usage = "usage: %prog [config file]"
+	parser = OptionParser(usage=usage)
+	return parser
+
+def main():
+	parser = option_parser()
+	(options, args) = parser.parse_args()
+	if len(args) != 1:
+		sys.stderr.write("Requires 1 argument to run\n")
+		sys.exit(1)
+	config = parse_config(args[0])
+	assemble_walls(config)
+
+if __name__ == '__main__':
+	main()
+

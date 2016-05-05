@@ -1,0 +1,2 @@
+include config/requirements.txt
+include README.md

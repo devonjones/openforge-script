@@ -1,0 +1,37 @@
+# compiled code
+*.pyc
+
+# swap files
+*.swp
+*.swo
+*~
+*#
+
+# py.test artifacts
+__pycache__
+
+# log files
+*.log
+
+# coverage files
+.coverage
+htmlcov
+
+# ide files
+.komodoproject
+.komodotools
+.classpath
+.project
+.pydevproject
+.settings
+.idea
+*.iml
+*.ipr
+*.iws
+
+# build files
+target
+dist/
+*.egg-info/
+build/
+MANIFEST
