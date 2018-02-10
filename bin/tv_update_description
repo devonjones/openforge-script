@@ -5,29 +5,38 @@ import time
 import thingiverse
 from optparse import OptionParser
 
-def get_things(name, payload):
+def get_things(name, payload, dry):
 	t = thingiverse.Thingiverse()
 	for short_thing in t.get_my_things():
 		thing = t.get_thing(short_thing)
 		if thing.name.find(name) > -1:
-			if payload.has_key('new'):
-				if thing.description.find(payload['old']) > -1:
-					new_desc = thing.description.replace(payload['old'], payload['new'])
-					thing.update(description=new_desc)
-					print thing.name
-			elif thing.description.find(payload['old']) == -1:
+			if not dry:
+				if payload.has_key('new'):
+					if thing.description.find(payload['old']) > -1:
+						new_desc = thing.description.replace(payload['old'], payload['new'])
+						thing.update(description=new_desc)
+						print "Replaced: %s" % thing.name
+					elif thing.description.find(payload['old']) == -1:
+						print "Skipped: %s" % thing.name
+						if thing.description.find(payload['new']) == -1:
+							print json.dumps({"description": "%s" % thing.description})
+			else:
 				print thing.name
 
 def option_parser():
 	usage = "usage: %prog [name]"
 	parser = OptionParser(usage=usage)
+	parser.add_option(
+			"-d", "--dry-run", dest="dry",
+			help="Dry xirRun to show you what files would be tested",
+			default=False, action="store_true")
 	return parser
 
 def main():
 	parser = option_parser()
-	(_, args) = parser.parse_args()
+	(opts, args) = parser.parse_args()
 	new = "".join(sys.stdin.readlines())
-	get_things(args[0], json.loads(new))
+	get_things(args[0], json.loads(new), opts.dry)
 
 if __name__ == '__main__':
 	main()
