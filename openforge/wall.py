@@ -28,7 +28,7 @@ def assemble_wall(config, x, y):
 	if config['external']:
 		edge_diff = 0.0
 
-	back.location = (0.0, y*25-edge_diff, 5.199)
+	back.location = (0.01, y*25-edge_diff, 5.19)
 	ops.union(base, back)
 	base.select = False
 	ops.delete(back)

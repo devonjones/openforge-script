@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import logging
 from optparse import OptionParser
 from openforge.base import add_bases
 from openforge.config import parse_config
@@ -15,6 +16,8 @@ def main():
 	if len(args) != 1:
 		sys.stderr.write("Requires 1 argument to run\n")
 		sys.exit(1)
+	logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+	logger = logging.getLogger('openforge')
 	config = parse_config(args[0])
 	add_bases(config)
 
