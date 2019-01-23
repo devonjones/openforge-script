@@ -60,7 +60,7 @@ class TestFacecount(object):
 
 	def setup(self):
 		self.face_count = len(list(self.base.data.polygons))
-	
+
 	def test(self, final, acceptable=0):
 		final_count = len(list(final.data.polygons))
 		if final_count == self.face_count:
@@ -84,7 +84,7 @@ class TestNonmanifold(object):
 		self.obj_count = self.get_nonmanifold_count(self.obj)
 		set_object_active(self.context, active)
 		set_object_active(bpy.context, active)
-	
+
 	def get_nonmanifold_count(self, obj):
 		set_object_active(self.context, obj)
 		bpy.ops.object.mode_set(mode='EDIT')
@@ -146,7 +146,7 @@ class BaseBoolean(object):
 		if self.jiggle_x_pos or self.jiggle_x_neg or self.jiggle_y_pos or self.jiggle_y_neg or self.jiggle_z_pos or self.jiggle_z_neg:
 			return True
 		return False
-	
+
 	def unionize(self, context, objs):
 		base = BaseObject(context.scene.objects.active, context)
 		objs.sort(key=lambda x: x.name)
@@ -223,7 +223,7 @@ class BaseBoolean(object):
 		obj.get_object().location.y = obj.get_object().location.y + y
 		obj.get_object().location.z = obj.get_object().location.z + z
 		self.report({'INFO'}, "Jiggle: %s (%s,%s,%s) -> %s" % (obj.get_object(), x, y, z, obj.get_object().location))
-	
+
 	def attempt_union(self, context, base, obj, hideobject=True):
 		bpy.ops.ed.undo_push()
 		tests = []
@@ -234,25 +234,24 @@ class BaseBoolean(object):
 		union(self, context, base.get_object(), obj.get_object(), operation=self.operation, solver=self.solver)
 		base.select()
 		success = True
-		print(base)
 		for test in tests:
 			if not test.test(base.get_object()):
 				success = False
 		if success and hideobject:
 			obj.get_object().hide = True
-		else:
+		if not success:
 			bpy.context.scene.objects.active = base.get_object()
 			bpy.ops.ed.undo()
 			return False
 		base.select()
 		return True
-	
+
 class Unionize(bpy.types.Operator, BaseBoolean):
 	"""Booleans the active object with every visible object"""
 	bl_idname = "openforge.unionize"
 	bl_label = "Unionize"
 	bl_options = {'REGISTER', 'UNDO'}
-	
+
 	operation = bpy.props.EnumProperty(name="Operation", default='UNION', items=boolean_operations)
 	solver = bpy.props.EnumProperty(name="Solver", default='CARVE', items=boolean_solvers)
 	test_nonmanifold = bpy.props.BoolProperty(name="Test Non Manifold", default=True)
@@ -279,7 +278,7 @@ class Unionize(bpy.types.Operator, BaseBoolean):
 						result = self.run_jiggle(context, base, obj, obj)
 					if not result and self.halt:
 						return
-	
+
 	def execute(self, context):
 		self.unionize(context, filter_unhidden(context))
 		return {'FINISHED'}

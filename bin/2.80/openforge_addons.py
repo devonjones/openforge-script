@@ -230,13 +230,12 @@ class BaseBoolean(object):
 		union(self, context, base.get_object(), obj.get_object(), operation=self.operation)
 		base.select()
 		success = True
-		print(base)
 		for test in tests:
 			if not test.test(base.get_object()):
 				success = False
 		if success and hideobject:
 			obj.get_object().hide_viewport = True
-		else:
+		if not success:
 			bpy.context.view_layer.objects.active = base.get_object()
 			bpy.ops.ed.undo()
 			return False
